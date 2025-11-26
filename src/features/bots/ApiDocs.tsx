@@ -152,6 +152,37 @@ await SendLog("my-bot", 1, "Crash detected", "./crash.log");`,
         </button>
         <pre className="api-docs-code">{getCode(platform)}</pre>
       </div>
+
+      <div className="api-response">
+        <h3>Ответы API</h3>
+        <table className="response-table">
+          <thead>
+            <tr><th>Статус</th><th>Ответ</th><th>Описание</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>200</code></td>
+              <td><code>{'{ ok: true }'}</code></td>
+              <td>Лог отправлен</td>
+            </tr>
+            <tr>
+              <td><code>400</code></td>
+              <td><code>{'{ error: "..." }'}</code></td>
+              <td>Не переданы обязательные поля</td>
+            </tr>
+            <tr>
+              <td><code>404</code></td>
+              <td><code>{'{ error: "..." }'}</code></td>
+              <td>Бот не найден</td>
+            </tr>
+            <tr>
+              <td><code>500</code></td>
+              <td><code>{'{ error: "...", details: "..." }'}</code></td>
+              <td>Ошибка Telegram/сервера</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
