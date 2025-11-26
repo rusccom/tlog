@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BotForm } from './features/bots/BotForm';
 import { BotList } from './features/bots/BotList';
+import { ApiDocs } from './features/bots/ApiDocs';
 import { fetchBots, createBot, deleteBot } from './features/bots/botsApi';
 import type { Bot, BotInput } from './features/bots/bot.types';
 
@@ -48,6 +49,8 @@ export function App() {
         ) : (
           <BotList bots={bots} onDelete={handleDelete} />
         )}
+
+        <ApiDocs apiUrl={window.location.origin} />
       </main>
     </div>
   );

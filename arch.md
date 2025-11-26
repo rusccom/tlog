@@ -19,6 +19,7 @@ Tlog/
 │   └── features/bots/          # Фича управления ботами
 │       ├── BotList.tsx         # Таблица ботов
 │       ├── BotForm.tsx         # Форма добавления
+│       ├── ApiDocs.tsx         # Инструкция по API (промпт для AI)
 │       ├── botsApi.ts          # API функции
 │       └── bot.types.ts        # Типы
 ├── functions/api/              # Backend
