@@ -1,0 +1,60 @@
+TLOG API — Отправка логов в Telegram
+=====================================
+
+Endpoint: POST https://your-domain.pages.dev/api/log
+Content-Type: multipart/form-data
+
+Параметры:
+- bot      (string)  — название бота, зарегистрированного в системе
+- type     (0 | 1)   — тип сообщения: 0 = info, 1 = error
+- message  (string)  — текст сообщения
+- file     (File)    — вложение, опционально
+
+Примеры:
+
+1. Отправка текстового лога (JavaScript/fetch):
+
+   const formData = new FormData();
+   formData.append('bot', 'my-bot');
+   formData.append('type', '1');
+   formData.append('message', 'Ошибка подключения к базе данных');
+
+   fetch('https://your-domain.pages.dev/api/log', {
+     method: 'POST',
+     body: formData
+   });
+
+2. Отправка лога с файлом:
+
+   const formData = new FormData();
+   formData.append('bot', 'my-bot');
+   formData.append('type', '0');
+   formData.append('message', 'Отчёт за день');
+   formData.append('file', fileBlob, 'report.pdf');
+
+   fetch('https://your-domain.pages.dev/api/log', {
+     method: 'POST',
+     body: formData
+   });
+
+3. cURL:
+
+   curl -X POST https://your-domain.pages.dev/api/log \
+     -F "bot=my-bot" \
+     -F "type=1" \
+     -F "message=Ошибка сервера"
+
+4. cURL с файлом:
+
+   curl -X POST https://your-domain.pages.dev/api/log \
+     -F "bot=my-bot" \
+     -F "type=0" \
+     -F "message=Лог приложения" \
+     -F "file=@/path/to/file.log"
+
+Ответы:
+- 200 { "ok": true }           — успешно отправлено
+- 400 { "error": "..." }       — отсутствуют обязательные поля
+- 404 { "error": "..." }       — бот не найден
+- 500 { "error": "..." }       — ошибка сервера или Telegram
+
