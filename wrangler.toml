@@ -5,5 +5,5 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "tlog-db"
-database_id = "YOUR_DATABASE_ID_HERE"
+database_id = "802802f1-97bf-42df-a4d7-454f49b2a73c"
 
