@@ -1,8 +1,11 @@
 import type { Bot, BotInput } from './bot.types';
 
+type BotsResponse = { bots?: Bot[] };
+type ErrorResponse = { error?: string };
+
 export async function fetchBots(): Promise<Bot[]> {
   const response = await fetch('/api/bots');
-  const data = await response.json();
+  const data: BotsResponse = await response.json();
   return data.bots || [];
 }
 
@@ -14,8 +17,8 @@ export async function createBot(bot: BotInput): Promise<void> {
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to create bot');
+    const err: ErrorResponse = await response.json();
+    throw new Error(err.error || 'Failed to create bot');
   }
 }
 
@@ -25,8 +28,8 @@ export async function deleteBot(id: number): Promise<void> {
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to delete bot');
+    const err: ErrorResponse = await response.json();
+    throw new Error(err.error || 'Failed to delete bot');
   }
 }
 
