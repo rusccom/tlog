@@ -22,6 +22,12 @@ export function ApiDocs({ apiUrl }: Props) {
     const codes: Record<Platform, string> = {
       javascript: `// Tlog - Telegram Logger
 // API: POST ${apiUrl}/api/log (multipart/form-data)
+//
+// Response:
+//   200: { ok: true }              — success
+//   400: { error: "..." }          — missing required fields
+//   404: { error: "..." }          — bot not found
+//   500: { error, details }        — telegram/server error
 
 async function sendLog(bot: string, type: 0 | 1, message: string, file?: File) {
   const form = new FormData();
@@ -32,6 +38,7 @@ async function sendLog(bot: string, type: 0 | 1, message: string, file?: File) {
   
   const res = await fetch('${apiUrl}/api/log', { method: 'POST', body: form });
   if (!res.ok) throw new Error((await res.json()).error);
+  return await res.json(); // { ok: true }
 }
 
 // Usage:
@@ -40,6 +47,12 @@ sendLog('my-bot', 1, 'Payment failed');        // error`,
 
       python: `# Tlog - Telegram Logger
 # API: POST ${apiUrl}/api/log (multipart/form-data)
+#
+# Response:
+#   200: { ok: true }              — success
+#   400: { error: "..." }          — missing required fields
+#   404: { error: "..." }          — bot not found
+#   500: { error, details }        — telegram/server error
 
 import requests
 
@@ -49,6 +62,7 @@ def send_log(bot: str, log_type: int, message: str, file_path: str = None):
     files = {'file': open(file_path, 'rb')} if file_path else None
     r = requests.post('${apiUrl}/api/log', data=data, files=files)
     r.raise_for_status()
+    return r.json()  # { ok: true }
 
 # Usage:
 send_log('my-bot', 0, 'Server started')
@@ -56,6 +70,12 @@ send_log('my-bot', 1, 'Error occurred', './error.log')`,
 
       curl: `# Tlog - Telegram Logger
 # API: POST ${apiUrl}/api/log (multipart/form-data)
+#
+# Response:
+#   200: { ok: true }              — success
+#   400: { error: "..." }          — missing required fields
+#   404: { error: "..." }          — bot not found
+#   500: { error, details }        — telegram/server error
 
 # Info log
 curl -X POST ${apiUrl}/api/log \\
@@ -73,8 +93,14 @@ curl -X POST ${apiUrl}/api/log \\
       php: `<?php
 // Tlog - Telegram Logger
 // API: POST ${apiUrl}/api/log (multipart/form-data)
+//
+// Response:
+//   200: { ok: true }              — success
+//   400: { error: "..." }          — missing required fields
+//   404: { error: "..." }          — bot not found
+//   500: { error, details }        — telegram/server error
 
-function sendLog(string $bot, int $type, string $message, ?string $filePath = null): void {
+function sendLog(string $bot, int $type, string $message, ?string $filePath = null): array {
     $data = ['bot' => $bot, 'type' => $type, 'message' => $message];
     
     if ($filePath && file_exists($filePath)) {
@@ -87,6 +113,7 @@ function sendLog(string $bot, int $type, string $message, ?string $filePath = nu
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
     curl_close($ch);
+    return json_decode($response, true); // ['ok' => true]
 }
 
 // Usage:
@@ -95,10 +122,16 @@ sendLog('my-bot', 1, 'Database error', './debug.log');`,
 
       csharp: `// Tlog - Telegram Logger
 // API: POST ${apiUrl}/api/log (multipart/form-data)
+//
+// Response:
+//   200: { ok: true }              — success
+//   400: { error: "..." }          — missing required fields
+//   404: { error: "..." }          — bot not found
+//   500: { error, details }        — telegram/server error
 
 using System.Net.Http;
 
-public static async Task SendLog(string bot, int type, string message, string? filePath = null)
+public static async Task<string> SendLog(string bot, int type, string message, string? filePath = null)
 {
     using var client = new HttpClient();
     using var form = new MultipartFormDataContent();
@@ -112,6 +145,7 @@ public static async Task SendLog(string bot, int type, string message, string? f
     
     var response = await client.PostAsync("${apiUrl}/api/log", form);
     response.EnsureSuccessStatusCode();
+    return await response.Content.ReadAsStringAsync(); // { ok: true }
 }
 
 // Usage:
@@ -151,37 +185,6 @@ await SendLog("my-bot", 1, "Crash detected", "./crash.log");`,
           {copied ? '✓ Скопировано!' : 'Копировать'}
         </button>
         <pre className="api-docs-code">{getCode(platform)}</pre>
-      </div>
-
-      <div className="api-response">
-        <h3>Ответы API</h3>
-        <table className="response-table">
-          <thead>
-            <tr><th>Статус</th><th>Ответ</th><th>Описание</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>200</code></td>
-              <td><code>{'{ ok: true }'}</code></td>
-              <td>Лог отправлен</td>
-            </tr>
-            <tr>
-              <td><code>400</code></td>
-              <td><code>{'{ error: "..." }'}</code></td>
-              <td>Не переданы обязательные поля</td>
-            </tr>
-            <tr>
-              <td><code>404</code></td>
-              <td><code>{'{ error: "..." }'}</code></td>
-              <td>Бот не найден</td>
-            </tr>
-            <tr>
-              <td><code>500</code></td>
-              <td><code>{'{ error: "...", details: "..." }'}</code></td>
-              <td>Ошибка Telegram/сервера</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </section>
   );
