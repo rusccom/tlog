@@ -19,11 +19,13 @@ Tlog/
 │   └── features/bots/          # Фича управления ботами
 │       ├── BotList.tsx         # Таблица ботов
 │       ├── BotForm.tsx         # Форма добавления
-│       ├── ApiDocs.tsx         # Инструкция по API (промпт для AI)
+│       ├── ApiDocs.tsx         # Инструкция по API /api/log (промпт для AI)
+│       ├── NotifyDocs.tsx     # Инструкция по API /api/notify (one-liner)
 │       ├── botsApi.ts          # API функции
 │       └── bot.types.ts        # Типы
 ├── functions/api/              # Backend
 │   ├── log.ts                  # POST /api/log
+│   ├── notify.ts               # GET /api/notify (one-liner)
 │   └── bots/
 │       ├── index.ts            # GET, POST /api/bots
 │       └── [id].ts             # DELETE /api/bots/:id
@@ -61,6 +63,27 @@ Tlog/
 | 400 | `{ error: "..." }` | Не переданы обязательные поля |
 | 404 | `{ error: "..." }` | Бот не найден |
 | 500 | `{ error: "...", details: "..." }` | Ошибка Telegram/сервера |
+
+### GET /api/notify
+Quick one-liner для отправки уведомлений в Telegram. Не пересекается с `/api/log`.
+
+Query параметры:
+- `bot` — название бота (обязательно)
+- `message` — текст сообщения (обязательно)
+- `type` — 0 (info, по умолчанию) или 1 (error)
+
+Ответы:
+| Статус | Ответ | Описание |
+|--------|-------|----------|
+| 200 | `{ ok: true }` | Уведомление отправлено |
+| 400 | `{ error: "..." }` | Не переданы обязательные параметры |
+| 404 | `{ error: "..." }` | Бот не найден |
+| 500 | `{ error: "...", details: "..." }` | Ошибка Telegram/сервера |
+
+Пример (одна строка):
+```
+fetch('https://your-domain.pages.dev/api/notify?bot=my-bot&message=Hello')
+```
 
 ### GET /api/bots
 Список всех ботов (для UI).

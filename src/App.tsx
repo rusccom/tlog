@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BotForm } from './features/bots/BotForm';
 import { BotList } from './features/bots/BotList';
 import { ApiDocs } from './features/bots/ApiDocs';
+import { NotifyDocs } from './features/bots/NotifyDocs';
 import { fetchBots, createBot, deleteBot } from './features/bots/botsApi';
 import type { Bot, BotInput } from './features/bots/bot.types';
 
@@ -50,6 +51,7 @@ export function App() {
           <BotList bots={bots} onDelete={handleDelete} />
         )}
 
+        <NotifyDocs apiUrl={window.location.origin} />
         <ApiDocs apiUrl={window.location.origin} />
       </main>
     </div>
